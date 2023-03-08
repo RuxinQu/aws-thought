@@ -1,6 +1,8 @@
 const AWS = require("aws-sdk");
 AWS.config.update({
   region: "us-west-2",
+  //for dynamodb local
+  // endpoint: "http://localhost:8000",
 });
 const dynamodb = new AWS.DynamoDB({ apiVersion: "2012-08-10" });
 

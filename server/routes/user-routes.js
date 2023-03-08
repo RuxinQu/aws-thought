@@ -3,6 +3,8 @@ const router = express.Router();
 const AWS = require("aws-sdk");
 const awsConfig = {
   region: "us-west-2",
+  //for dynamodb local
+  // endpoint: "http://localhost:8000",
 };
 AWS.config.update(awsConfig);
 const dynamodb = new AWS.DynamoDB.DocumentClient();
@@ -27,7 +29,7 @@ router.get("/users/:username", (req, res) => {
   console.log(`Querying for thought(s) from ${req.params.username}.`);
   const params = {
     TableName: table,
-    ProjectionExpression: "#th, #ca",
+    ProjectionExpression: "#th, #ca, #un",
     KeyConditionExpression: "#un = :user",
     ExpressionAttributeNames: {
       "#un": "username",
