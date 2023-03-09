@@ -1,4 +1,3 @@
-const AWS = require("aws-sdk");
 const {
   DynamoDBClient,
   CreateTableCommand,
@@ -6,7 +5,7 @@ const {
 const client = new DynamoDBClient({
   region: "us-west-2",
   //for dynamodb local
-  endpoint: "http://localhost:8000",
+  // endpoint: "http://localhost:8000",
 });
 
 const params = {

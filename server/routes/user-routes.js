@@ -5,11 +5,12 @@ const {
   DynamoDBClient,
   ScanCommand,
   QueryCommand,
+  PutItemCommand,
 } = require("@aws-sdk/client-dynamodb");
 
 const client = new DynamoDBClient({
   region: "us-west-2",
-  endpoint: "http://localhost:8000",
+  // endpoint: "http://localhost:8000",
 });
 const table = "Thoughts";
 
@@ -55,27 +56,27 @@ router.get("/users/:username", async (req, res) => {
 });
 
 // Create new user
-router.post("/users", (req, res) => {
+router.post("/users", async (req, res) => {
   const params = {
     TableName: table,
     Item: {
-      username: req.body.username,
-      createdAt: Date.now(),
-      thought: req.body.thought,
+      username: { S: req.body.username },
+      thought: { S: req.body.thought },
+      // when we use the putItem or updateItem API to write a Number value to a Number attribute,
+      // we need to wrap the numeric value with quotes because these APIs require the attribute values to be strings.
+
+      // When we retrieve the value of a Number attribute using the getItem or query API, the value is returned as a numeric value,
+      // not as a string. We don't need to wrap the numeric value with quotes in this case.
+      createdAt: { N: `${Date.now()}` },
     },
   };
-  dynamodb.put(params, (err, data) => {
-    if (err) {
-      console.error(
-        "Unable to add item. Error JSON:",
-        JSON.stringify(err, null, 2)
-      );
-      res.status(500).json(err); // an error occurred
-    } else {
-      console.log("Added item:", JSON.stringify(data, null, 2));
-      res.json({ Added: JSON.stringify(data, null, 2) });
-    }
-  });
+  console.log(params);
+  try {
+    const data = await client.send(new PutItemCommand(params));
+    console.log("Successfully inserted item:", data);
+  } catch (err) {
+    console.error("Error inserting item:", err.message);
+  }
 });
 
 module.exports = router;
