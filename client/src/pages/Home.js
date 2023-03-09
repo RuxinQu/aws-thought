@@ -11,14 +11,13 @@ const Home = () => {
       try {
         const res = await fetch("/api/users");
         const jsonData = await res.json();
-        const _data = jsonData.sort((a, b) => b.createdAt - a.createdAt);
+        const _data = jsonData.sort((a, b) => b.createdAt.N - a.createdAt.N);
         setThoughts([..._data]);
         setIsLoaded(true);
       } catch (error) {
         console.log(error);
       }
     };
-
     fetchData();
   }, []);
 
