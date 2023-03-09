@@ -1,31 +1,33 @@
 const express = require("express");
 const router = express.Router();
-const AWS = require("aws-sdk");
-const awsConfig = {
+
+const {
+  DynamoDBClient,
+  ScanCommand,
+  QueryCommand,
+} = require("@aws-sdk/client-dynamodb");
+
+const client = new DynamoDBClient({
   region: "us-west-2",
-  //for dynamodb local
-  // endpoint: "http://localhost:8000",
-};
-AWS.config.update(awsConfig);
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+  endpoint: "http://localhost:8000",
+});
 const table = "Thoughts";
 
-router.get("/users", (req, res) => {
+router.get("/users", async (req, res) => {
   const params = {
     TableName: table,
   };
-  // Scan return all items in the table
-  dynamodb.scan(params, (err, data) => {
-    if (err) {
-      res.status(500).json(err); // an error occurred
-    } else {
-      res.json(data.Items);
-    }
-  });
+  try {
+    // Scan return all items in the table
+    const data = await client.send(new ScanCommand(params));
+    res.status(200).json(data.Items);
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
 });
 
 // get thoughts from a user
-router.get("/users/:username", (req, res) => {
+router.get("/users/:username", async (req, res) => {
   console.log(`Querying for thought(s) from ${req.params.username}.`);
   const params = {
     TableName: table,
@@ -41,15 +43,15 @@ router.get("/users/:username", (req, res) => {
     },
     ScanIndexForward: false,
   };
-  dynamodb.query(params, (err, data) => {
-    if (err) {
-      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
-      res.status(500).json(err); // an error occurred
-    } else {
-      console.log("Query succeeded.");
-      res.json(data.Items);
-    }
-  });
+  const command = new QueryCommand(params);
+  try {
+    const data = await client.send(QueryCommand(command));
+    console.log("Query succeeded.");
+    res.json(data.Items);
+  } catch (err) {
+    console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+    res.status(500).json(err.message);
+  }
 });
 
 // Create new user

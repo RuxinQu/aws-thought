@@ -11,18 +11,20 @@ const ThoughtList = ({ thoughts, title }) => {
       <h3>{title}</h3>
       {thoughts &&
         thoughts.map((thought) => (
-          <div key={thought.createdAt} className="card mb-3">
+          <div key={thought.createdAt.N} className="card mb-3">
             <p className="card-header">
               <Link
-                to={`/profile/${thought.username}`}
+                to={`/profile/${thought.username.S}`}
                 style={{ fontWeight: 700 }}
                 className="text-light"
               >
-                {thought.username}'s thought on{" "}
-                {new Date(parseInt(thought.createdAt)).toString()}
+                {thought.username.S}'s thought on{" "}
+                {new Date(parseInt(thought.createdAt.N)).toString()}
               </Link>{" "}
             </p>
-            {thought.thought && <p className="px-2 mt-2">{thought.thought}</p>}
+            {thought.thought.S && (
+              <p className="px-2 mt-2">{thought.thought.S}</p>
+            )}
           </div>
         ))}
     </div>
