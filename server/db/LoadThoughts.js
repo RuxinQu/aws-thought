@@ -1,36 +1,34 @@
-const AWS = require("aws-sdk");
-const fs = require("fs");
-AWS.config.update({
-  region: "us-west-2",
-  //for dynamodb local
-  // endpoint: "http://localhost:8000",
-});
-const dynamodb = new AWS.DynamoDB.DocumentClient({ apiVersion: "2012-08-10" });
-console.log("Importing thoughts into DynamoDB. Please wait.");
-//The relative path for the fs.readFileSync function is relative to where the file is executed, not the path between files. In this case, the file path will work if this command is executed from the project's root directory.
-const allUsers = JSON.parse(
-  fs.readFileSync("./server/seed/users.json", "utf8")
-);
+const {
+  DynamoDBClient,
+  BatchWriteItemCommand,
+} = require("@aws-sdk/client-dynamodb");
 
-allUsers.forEach((user) => {
-  const params = {
-    TableName: "Thoughts",
-    Item: {
-      username: user.username,
-      createdAt: user.createdAt,
-      thought: user.thought,
-    },
-  };
-  dynamodb.put(params, (err, data) => {
-    if (err) {
-      console.error(
-        "Unable to add thought",
-        user.username,
-        ". Error JSON:",
-        JSON.stringify(err, null, 2)
-      );
-    } else {
-      console.log("PutItem succeeded:", user.username);
-    }
-  });
+const client = new DynamoDBClient({
+  region: "us-west-2", // Replace with the region of your choice
+  endpoint: "http://localhost:8000", // Replace with the endpoint of your local DynamoDB instance
+});
+
+const allUsers = require("../seed/users.json");
+
+const params = {
+  RequestItems: {
+    Thoughts: allUsers.map((user) => ({
+      PutRequest: {
+        Item: {
+          username: { S: user.username },
+          createdAt: { N: user.createdAt },
+          thought: { S: user.thought },
+        },
+      },
+    })),
+  },
+};
+
+const command = new BatchWriteItemCommand(params);
+client.send(command, (err, data) => {
+  if (err) {
+    console.error("Unable to write items to table. Error:", err);
+  } else {
+    console.log("Wrote items to table. Result:", data);
+  }
 });
