@@ -6,6 +6,7 @@ const ThoughtForm = () => {
     thought: "",
   });
   const [characterCount, setCharacterCount] = useState(0);
+  const [uploaded, setUploaded] = useState(false);
   const fileInput = useRef(null);
 
   // update state based on form input changes
@@ -20,7 +21,7 @@ const ThoughtForm = () => {
     event.preventDefault();
     const data = new FormData();
     data.append("image", fileInput.current.files[0]);
-
+    console.log(data);
     const postImage = async () => {
       try {
         const res = await fetch("/api/image-upload", {
@@ -32,6 +33,7 @@ const ThoughtForm = () => {
         const postResponse = await res.json();
         console.log(postResponse);
         setFormState({ ...formState, image: postResponse.imageUrl });
+        setUploaded(true);
         console.log("postImage: ", postResponse.imageUrl);
         return postResponse.imageUrl;
       } catch (error) {
@@ -60,6 +62,7 @@ const ThoughtForm = () => {
 
     // clear form value
     setFormState({ username: "", thought: "" });
+    setUploaded(false);
     setCharacterCount(0);
   };
 
@@ -92,6 +95,7 @@ const ThoughtForm = () => {
           <button className="btn" onClick={handleImageUpload} type="submit">
             Upload
           </button>
+          {uploaded && <scan>Image uploaded!</scan>}
         </label>
         <button className="btn col-12 " type="submit">
           Submit

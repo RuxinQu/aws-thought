@@ -25,6 +25,15 @@ const ThoughtList = ({ thoughts, title }) => {
             {thought.thought.S && (
               <p className="px-2 mt-2">{thought.thought.S}</p>
             )}
+            {thought.image && (
+              <p className="px-2">
+                <img
+                  className="mt-3 ml-4 thought-image"
+                  src={thought.image.S}
+                  alt="S3 bucket response"
+                />
+              </p>
+            )}
           </div>
         ))}
     </div>
