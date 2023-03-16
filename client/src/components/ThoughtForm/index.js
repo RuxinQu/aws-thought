@@ -64,6 +64,7 @@ const ThoughtForm = () => {
     setFormState({ username: "", thought: "" });
     setUploaded(false);
     setCharacterCount(0);
+    window.location.reload();
   };
 
   return (
