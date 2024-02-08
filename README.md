@@ -5,12 +5,13 @@
 ![dynamodb](https://img.shields.io/badge/Amazon%20DynamoDB-4053D6?style=for-the-badge&logo=Amazon%20DynamoDB&logoColor=white)
 ![express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![multer](https://img.shields.io/badge/Multer-ff6600?style=for-the-badge&logoColor=white)
+![microsoft-azure](https://img.shields.io/badge/microsoft%20azure-0089D6?style=for-the-badge&logo=microsoft-azure&logoColor=white)
 
 ## Description
 
-A blog website that users can post their thoughts and upload images. The thoughts are saved in [Amazon DynamoDB](https://aws.amazon.com/dynamodb/), while the images are saved to [Amazon S3 bucket](https://aws.amazon.com/s3/). The application is deployed to an [Amazon EC2](https://aws.amazon.com/ec2/) instance. The application follows the [Infrastructure as a Service (IaaS)](https://aws.amazon.com/what-is/iaas/) model.
+A blog website that users can post their thoughts and upload images. The thoughts are saved in [Amazon DynamoDB](https://aws.amazon.com/dynamodb/), while the images are saved to [Amazon S3 bucket](https://aws.amazon.com/s3/). The application is deployed to the [Azure Standard B2als v2](https://learn.microsoft.com/en-us/azure/virtual-machines/basv2) virtual machine. The application follows the [Infrastructure as a Service (IaaS)](https://aws.amazon.com/what-is/iaas/) model.
 
-View the deployed website: http://ec2-35-162-91-240.us-west-2.compute.amazonaws.com
+View the deployed website: http://
 
 ## Usage
 

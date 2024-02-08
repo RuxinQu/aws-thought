@@ -6,7 +6,7 @@ const ThoughtForm = () => {
     thought: "",
   });
   const [characterCount, setCharacterCount] = useState(0);
-  const [uploaded, setUploaded] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const fileInput = useRef(null);
 
   // update state based on form input changes
@@ -17,12 +17,10 @@ const ThoughtForm = () => {
     }
   };
 
-  const handleImageUpload = (event) => {
-    event.preventDefault();
-    const data = new FormData();
-    data.append("image", fileInput.current.files[0]);
-    console.log(data);
-    const postImage = async () => {
+  const handleImageUpload = async () => {
+    if (!!fileInput.current.files[0]) {
+      const data = new FormData();
+      data.append("image", fileInput.current.files[0]);
       try {
         const res = await fetch("http://20.29.208.6/api/image-upload", {
           mode: "cors",
@@ -31,38 +29,34 @@ const ThoughtForm = () => {
         });
         if (!res.ok) throw new Error(res.statusText);
         const postResponse = await res.json();
-        console.log(postResponse);
-        setFormState({ ...formState, image: postResponse.imageUrl });
-        setUploaded(true);
-        console.log("postImage: ", postResponse.imageUrl);
         return postResponse.imageUrl;
       } catch (error) {
         console.log(error);
       }
-    };
-    postImage();
+    } else {
+      return;
+    }
   };
 
   // submit form
-  const handleFormSubmit = (event) => {
+  const handleFormSubmit = async (event) => {
     event.preventDefault();
-    const postData = async () => {
-      const res = await fetch("http://20.29.208.6/api/users", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formState),
-      });
-      const data = await res.json();
-      console.log(data);
-    };
-    postData();
+    setUploading(true);
+    let url = (await handleImageUpload()) || "";
+    await fetch("http://20.29.208.6/api/users", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...formState, image: url }),
+    });
+
+    console.log("done");
 
     // clear form value
     setFormState({ username: "", thought: "" });
-    setUploaded(false);
+    setUploading(false);
     setCharacterCount(0);
     window.location.reload();
   };
@@ -93,12 +87,8 @@ const ThoughtForm = () => {
         <label className="form-input col-12  p-1">
           Add an image to your thought:
           <input type="file" ref={fileInput} className="form-input p-2" />
-          <button className="btn" onClick={handleImageUpload} type="submit">
-            Upload
-          </button>
-          {uploaded && <scan>Image uploaded!</scan>}
         </label>
-        <button className="btn col-12 " type="submit">
+        <button type="submit" disabled={uploading}>
           Submit
         </button>
       </form>

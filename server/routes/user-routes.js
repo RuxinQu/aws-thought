@@ -69,12 +69,16 @@ router.post("/users", async (req, res) => {
       // When we retrieve the value of a Number attribute using the getItem or query API, the value is returned as a numeric value,
       // not as a string. We don't need to wrap the numeric value with quotes in this case.
       createdAt: { N: `${Date.now()}` },
-      image: { S: req.body.image },
     },
   };
+  if (req.body.image) {
+    params.Item.image = { S: req.body.image };
+  }
+
   try {
     const data = await client.send(new PutItemCommand(params));
-    console.log("Successfully inserted item:", data);
+    // console.log("Successfully inserted item:", data);
+    res.status(201).send(data);
   } catch (err) {
     console.error("Error inserting item:", err.message);
   }
