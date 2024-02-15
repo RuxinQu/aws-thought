@@ -1,6 +1,10 @@
 import React, { useState, useRef } from "react";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 
-const ThoughtForm = () => {
+export default function NewPost() {
   const [formState, setFormState] = useState({
     username: "",
     thought: "",
@@ -58,42 +62,51 @@ const ThoughtForm = () => {
     setFormState({ username: "", thought: "" });
     setUploading(false);
     setCharacterCount(0);
-    window.location.reload();
+    window.location.assign("/");
   };
 
   return (
-    <div>
-      <p className={`m-0 ${characterCount === 280 ? "text-error" : ""}`}>
-        Character Count: {characterCount}/280
-      </p>
-      <form
-        className="flex-row justify-center justify-space-between-md align-stretch"
-        onSubmit={handleFormSubmit}
-      >
-        <input
-          placeholder="Name"
-          name="username"
-          value={formState.username}
-          className="form-input col-12 "
-          onChange={handleChange}
-        ></input>
-        <textarea
-          placeholder="Here's a new thought..."
-          name="thought"
-          value={formState.thought}
-          className="form-input col-12 "
-          onChange={handleChange}
-        ></textarea>
-        <label className="form-input col-12  p-1">
-          Add an image to your thought:
-          <input type="file" ref={fileInput} className="form-input p-2" />
-        </label>
-        <button type="submit" disabled={uploading}>
-          Submit
-        </button>
-      </form>
-    </div>
-  );
-};
+    <Box
+      sx={{ width: { xs: "100%", md: "90%", lg: 800 }, margin: "50px auto" }}
+    >
+      <Typography variant="h5" color="#134e4a" textAlign="center" my={2}>
+        Add a new post
+      </Typography>
+      <form onSubmit={handleFormSubmit} className="newpost-container">
+        <div style={{ marginTop: 20, display: "flex", alignItems: "flex-end" }}>
+          <span>Username:</span>
+          <TextField
+            name="username"
+            variant="standard"
+            value={formState.username}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div style={{ margin: "30px 0" }}>
+          <p>Here's a new thought:</p>
+          <TextField
+            name="thought"
+            multiline
+            rows={4}
+            fullWidth
+            value={formState.thought}
+            onChange={handleChange}
+            required
+          />
+          <p style={{ padding: 0, margin: 0, fontSize: 16 }}>
+            Character Count: {characterCount}/280
+          </p>
+        </div>
 
-export default ThoughtForm;
+        <div style={{ margin: "20px 0" }}>
+          Add an image to your thought:
+          <input type="file" ref={fileInput} />
+        </div>
+        <Button variant="contained" type="submit" disabled={uploading}>
+          Submit
+        </Button>
+      </form>
+    </Box>
+  );
+}
