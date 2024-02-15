@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
 const NoMatch = () => {
   return (
-    <div>
-      Oops, we couldn't find that page.
+    <div style={{ textAlign: "center", marginTop: 50 }}>
+      <h1 style={{ color: "#134e4a" }}> Oops, we couldn't find that page.</h1>
     </div>
   );
 };

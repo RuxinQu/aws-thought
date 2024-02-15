@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import ThoughtList from "../components/ThoughtList";
-import ThoughtForm from "../components/ThoughtForm";
+import { ThoughtCard } from "../components/ThoughtCard";
+import Grid from "@mui/material/Grid";
+import { Link } from "react-router-dom";
+import Button from "@mui/material/Button";
 
 const Home = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -22,24 +24,37 @@ const Home = () => {
   }, []);
 
   return (
-    <main>
-      <div className="flex-row justify-space-between">
-        <div className="col-12 mb-3">
-          <ThoughtForm />
-        </div>
-        <div className={`col-12 mb-3 `}>
-          {!isLoaded ? (
-            <div>Loading...</div>
-          ) : (
-            <ThoughtList
-              thoughts={thoughts}
-              setThoughts={setThoughts}
-              title="Some Feed for Thought(s)..."
-            />
-          )}
-        </div>
-      </div>
-    </main>
+    <div>
+      <header>
+        <h1>Deep Thoughts</h1>
+        <Link to={"/newpost"}>
+          <Button variant="contained">+ New Post</Button>
+        </Link>
+      </header>
+
+      {!isLoaded ? (
+        <Grid container justifyContent="center" sx={{ margin: "50px auto" }}>
+          Loading...
+        </Grid>
+      ) : (
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="stretch"
+          spacing={2}
+          sx={{ maxWidth: 1200, margin: "50px auto" }}
+        >
+          {thoughts.length &&
+            thoughts.map((thought) => (
+              <ThoughtCard
+                thought={thought}
+                key={thought.createdAt.N}
+                link={true}
+              />
+            ))}
+        </Grid>
+      )}
+    </div>
   );
 };
 

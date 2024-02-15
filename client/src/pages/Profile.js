@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import ThoughtList from "../components/ThoughtList";
+import { ThoughtCard } from "../components/ThoughtCard";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 
 const Profile = (props) => {
   const { username: userParam } = useParams();
@@ -18,7 +20,6 @@ const Profile = (props) => {
       try {
         const res = await fetch(`http://20.29.208.6/api/users/${userParam}`);
         const data = await res.json();
-        console.log(data);
         setThoughts([...data]);
         setIsLoaded(true);
       } catch (error) {
@@ -30,24 +31,28 @@ const Profile = (props) => {
 
   return (
     <div>
-      <div className="flex-row mb-3">
-        <h2 className="bg-dark text-secondary p-3 display-inline-block">
-          Viewing {userParam ? `${userParam}'s` : "your"} profile.
-        </h2>
-      </div>
+      <Typography variant="h5" textAlign={"center"} mt={5} color={"#134e4a"}>
+        Viewing {userParam ? `${userParam}'s` : "your"} profile.
+      </Typography>
 
-      <div className="flex-row justify-space-between mb-3">
-        <div className="col-12 mb-3 col-lg-9">
-          {!isLoaded ? (
-            <div>Loading...</div>
-          ) : (
-            <ThoughtList
-              thoughts={thoughts}
-              title={`${userParam}'s thoughts...`}
-            />
-          )}
-        </div>
-      </div>
+      {!isLoaded ? (
+        <Grid container justifyContent="center" sx={{ margin: "50px auto" }}>
+          Loading...
+        </Grid>
+      ) : (
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="stretch"
+          spacing={2}
+          sx={{ maxWidth: 1200, margin: "50px auto" }}
+        >
+          {thoughts.length &&
+            thoughts.map((thought) => (
+              <ThoughtCard thought={thought} key={thought.createdAt.N} />
+            ))}
+        </Grid>
+      )}
     </div>
   );
 };
