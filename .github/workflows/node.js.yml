@@ -29,3 +29,4 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: sudo pm2 restart backend
+    - run: sudo systemctl restart nginx
