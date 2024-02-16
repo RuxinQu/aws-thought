@@ -26,7 +26,7 @@ const Home = () => {
   return (
     <div>
       <header>
-        <h1>Deep Thoughts</h1>
+        <h1>Cloud Thoughts</h1>
         <Link to={"/newpost"}>
           <Button variant="contained">+ New Post</Button>
         </Link>
