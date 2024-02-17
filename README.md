@@ -12,7 +12,7 @@
 
 - A blog website where users can post their thoughts and upload images.
 
-- The application is deployed on an [Azure Standard B2als v2](https://learn.microsoft.com/en-us/azure/virtual-machines/basv2) virtual machine, with a **CI/CD** workflow managed through GitHub Actions and an Azure Runner.
+- The application is deployed on an [Azure Standard B2als v2](https://learn.microsoft.com/en-us/azure/virtual-machines/basv2) virtual machine, with a self-hosted runner to facilitate CI/CD workflows through GitHub Actions.
 
 - Thoughts are stored in [Amazon DynamoDB](https://aws.amazon.com/dynamodb/), while images are stored in an [Amazon S3 bucket](https://aws.amazon.com/s3/). The application follows the Infrastructure as a Service (IaaS) model.
 
